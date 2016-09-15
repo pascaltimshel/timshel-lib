@@ -1,0 +1,49 @@
+---
+title: "biomart-gene_annotation-README"
+author: "Pascal Timshel"
+date: "September 15, 2016"
+output: html_document
+---
+
+### Filters of interest
+- entrezgene: EntrezGene ID
+- entrezgene_transcript_name: EntrezGene transcript name ID
+- transcript_gencode_basic: basic GENCODE transcript annotation?
+
+### Features - MUST have
+- ensembl_gene_id
+- external_gene_name (Associated Gene Name): gene name!
+- external_gene_source:
+    + e.g. "ensembl_havana" or "havana" for human
+    + e.g. "MGI Symbol" for mouse
+
+### Features - species specific 
+*Only returns something for species specific genes*
+
+- HUMAN: "hgnc_symbol", "hgnc_id"
+- MOUSE: mgi_id/mgi_symbol/mgi_description
+
+### Features - POTENTIAL
+- ensembl_transcript_id
+- ensembl_exon_id
+
+### Features - biology
+- description [unique for each ensembl_gene_id]: description of gene function + more
+- name_1006 [multi-entry]: GO Term Name [note that the feature "namespace_1003" is the GO domain, e.g. cellular component, biological process, and molecular function]
+- gene_biotype [?unique?]: protein_coding, unprocessed_pseudogene, pseudogene, and ~40 more possible values
+- wikigene_description [?unique?]: not so well covered
+- source: "ensembl_havana","ensembl", "havana", "insdc", "mirbase", ..?
+- status:  "KNOWN", "KNOWN_BY_PROJECTION", "NOVEL".. ?
+- hsapiens_homolog_ensembl_gene or hsapiens_homolog_associated_gene_name [multi-entry]: returns multiple entries for homolog genes
+
+
+# NOTES ABOUT biomaRt USAGE
+
+1. if a requested feature for a given "entry" contains multiple values, then the entry will be "multi-row" - one for each value in feature. 
+     + The other features will be duplicated.
+     + Example #1: if a ensembl_gene_id maps to multiple entrezgene (EntrezGene ID), the ensembl_gene_id will be duplicated/copied for each entrezgene.
+    + Example #2: when requestion GO annotation (e.g. name_1006), most genes have multiple GO annotations. For each gene, each GO annotation will have its own entry/row with the ensembl_gene_id duplicated.
+2) attributePages(ensembl) 
+    + You can only qury a single "page" a at time using getBM(). 
+    + I.e. you cannot get feature data and homolog data in a single getBM() call.
+
