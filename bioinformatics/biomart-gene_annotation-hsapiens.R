@@ -95,7 +95,7 @@ df.BM.all.merged.collapsed <- df.BM.all.ids %>% left_join(df.BM.all.feature.coll
 stopifnot(nrow(df.BM.all.ids) == nrow(df.BM.all.merged.collapsed)) # *we want to make sure that we have all genes included*
 
 ### Write table
-file.ensmbl_annotation <- sprintf("biomaRt-annotation-hsapiens_ensembl-v%s.txt.gz", ENSEMBL_VERSION)
+file.ensmbl_annotation <- sprintf("biomaRt-annotation-hsapiens_ensembl-v%s.txt.gz", ifelse(is.null(ENSEMBL_VERSION), "NEWEST_RELEASE_CHECK_R_SCRIPT", ENSEMBL_VERSION))
 file.ensmbl_annotation.gz <- gzfile(file.ensmbl_annotation, 'w')
 write.table(df.BM.all.merged.collapsed, file=file.ensmbl_annotation.gz, col.names=T, row.names=F, quote=F, sep="\t")
 close(file.ensmbl_annotation.gz)
